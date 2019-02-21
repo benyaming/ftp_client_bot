@@ -1,0 +1,6 @@
+telebot
+flask
+gunicorn
+psycopg2
+pytelegrambotapi
+urllib3
