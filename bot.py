@@ -81,7 +81,7 @@ def handle_document(message: Message):
     link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
            f'{bot.get_file(file_id).file_path}'
     caption = message.caption
-    MediaHandler(message.from_user.id, link, caption,
+    MediaHandler(message.from_user.id, link, caption=caption,
                  media_type='document').handle_media()
 
 
