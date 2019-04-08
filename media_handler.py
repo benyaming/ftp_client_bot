@@ -97,7 +97,8 @@ class MediaHandler(object):
             caption = f'<b>{self._client_name}</b>'
 
         connection_pool = urllib3.PoolManager()
-        media = connection_pool.request('GET', self._link).data
+        resp = connection_pool.request('GET', self._link)
+        media = resp.data
 
         actions = {
             'docunemt': admin_bot.send_document,
@@ -108,4 +109,4 @@ class MediaHandler(object):
 
         for operator in operators:
             send_media(operator, media, caption=caption, parse_mode='HTML')
-        media.release_conn()
+        resp.release_conn()
