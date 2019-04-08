@@ -76,21 +76,22 @@ def handle_photo(message: Message):
 
 @bot.message_handler(func=lambda message: True, content_types=['document'])
 @check_auth
-def handle_text_message(message: Message):
+def handle_document(message: Message):
     file_id = message.document.file_id
     link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
            f'{bot.get_file(file_id).file_path}'
     caption = message.caption
-    MediaHandler(message.from_user.id, link, caption, 'document').handle_media()
+    MediaHandler(message.from_user.id, link, caption,
+                 media_type='document').handle_media()
 
 
 @bot.message_handler(func=lambda message: True, content_types=['voice'])
 @check_auth
-def handle_voice_message(message: Message):
+def handle_voice(message: Message):
     file_id = message.voice.file_id
     link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
            f'{bot.get_file(file_id).file_path}'
-    MediaHandler(message.from_user.id, link, 'voice').handle_media()
+    MediaHandler(message.from_user.id, link, media_type='voice').handle_media()
 
 
 ignoring_types = ['sticker', 'audio', 'video', 'video_note', 'location', 'contact', '']
