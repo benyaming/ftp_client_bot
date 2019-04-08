@@ -31,7 +31,7 @@ def webhook():
 
 def report(message: Message):
     report_bot = telebot.TeleBot(settings.REPORT_BOT_TOKEN)
-    formatted_message = dumps(message.json, indent=2)
+    formatted_message = dumps(message.json, indent=2, ensure_ascii=False)
     report_msg = f'<b>Попытка доступа в клиентский бот!</b>\n\n<code>' \
                  f'{formatted_message}</code>'
     report_bot.send_message(5979588, report_msg, parse_mode='HTML')
