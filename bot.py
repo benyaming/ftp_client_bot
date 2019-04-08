@@ -7,8 +7,7 @@ from flask import request, Flask
 import db
 import settings
 import text_handler
-import document_handler
-
+from media_handler import MediaHandler
 
 WEBHOOK_HOST = settings.BOT_HOST
 WEBHOOK_PORT = settings.BOT_PORT
@@ -67,13 +66,12 @@ def handle_text_message(message: Message):
 
 @bot.message_handler(func=lambda message: True, content_types=['photo'])
 @check_auth
-def handle_text_message(message: Message):
+def handle_photo(message: Message):
     file_id = message.photo[-1].file_id
     link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
            f'{bot.get_file(file_id).file_path}'
     caption = message.caption
-    document_handler.PhotoHandler(message.from_user.id, link,
-                                  caption).handle_photo()
+    MediaHandler(message.from_user.id, link, caption).handle_media()
 
 
 @bot.message_handler(func=lambda message: True, content_types=['document'])
@@ -83,8 +81,7 @@ def handle_text_message(message: Message):
     link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
            f'{bot.get_file(file_id).file_path}'
     caption = message.caption
-    document_handler.DocumentHandler(message.from_user.id, link,
-                                     caption).handle_document()
+    MediaHandler(message.from_user.id, link, caption).handle_media(media_type='document')
 
 
 @bot.message_handler(func=lambda message: True, content_types=['voice'])
@@ -93,7 +90,7 @@ def handle_voice_message(message: Message):
     file_id = message.voice.file_id
     link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
            f'{bot.get_file(file_id).file_path}'
-    document_handler.DocumentHandler(message.from_user.id, link).handle_voice()
+    MediaHandler(message.from_user.id, link).handle_media(media_type='voice')
 
 
 ignoring_types = ['sticker', 'audio', 'video', 'video_note', 'location', 'contact', '']

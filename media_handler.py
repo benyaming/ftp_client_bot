@@ -87,7 +87,7 @@ class MediaHandler(object):
         self._client_name = db.get_client_name(self._user_id)
         self._caption = caption
 
-    def handle_media(self, media_type: str = 'document'):
+    def handle_media(self, media_type: str = 'photo'):
         token = db.get_client_bot_token(self._user_id)
         admin_bot = TeleBot(token)
         operators = db.get_operators(self._user_id)
