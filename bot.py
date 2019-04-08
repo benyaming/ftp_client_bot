@@ -87,8 +87,16 @@ def handle_text_message(message: Message):
                                      caption).handle_document()
 
 
-ignoring_types = ['voice', 'sticker', 'audio', 'video', 'video_note',
-                  'location', 'contact', '']
+@bot.message_handler(func=lambda message: True, content_types=['voice'])
+@check_auth
+def handle_voice_message(message: Message):
+    file_id = message.voice.file_id
+    link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
+           f'{bot.get_file(file_id).file_path}'
+    document_handler.DocumentHandler(message.from_user.id, link)
+
+
+ignoring_types = ['sticker', 'audio', 'video', 'video_note', 'location', 'contact', '']
 
 
 @bot.message_handler(func=lambda message: True, content_types=ignoring_types)

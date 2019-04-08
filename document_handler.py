@@ -36,7 +36,7 @@ class PhotoHandler(object):
 
 class DocumentHandler(object):
 
-    def __init__(self, user_id: int, link: str, caption: str):
+    def __init__(self, user_id: int, link: str, caption: str = None):
         self._user_id = user_id
         self._link = link
         self._client_name = db.get_client_name(self._user_id)
@@ -44,6 +44,9 @@ class DocumentHandler(object):
 
     def handle_document(self):
         self._forward_document_to_admin()
+
+    def handle_voice(self):
+        self._forward_voice_to_admin()
 
     def _forward_document_to_admin(self):
         token = db.get_client_bot_token(self._user_id)
@@ -60,4 +63,17 @@ class DocumentHandler(object):
         for operator in operators:
             admin_bot.send_document(operator, resp.data, caption=caption,
                                     parse_mode='HTML')
+        resp.release_conn()
+
+    def _forward_voice_to_admin(self):
+        token = db.get_client_bot_token(self._user_id)
+        admin_bot = TeleBot(token)
+        operators = db.get_operators(self._user_id)
+        caption = f'<b>{self._client_name}</b>'
+
+        connection_pool = urllib3.PoolManager()
+        resp = connection_pool.request('GET', self._link)
+
+        for operator in operators:
+            admin_bot.send_voice(operator, resp.data, caption, parse_mode='HTML',)
         resp.release_conn()
