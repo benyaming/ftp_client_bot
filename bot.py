@@ -93,7 +93,7 @@ def handle_voice_message(message: Message):
     file_id = message.voice.file_id
     link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
            f'{bot.get_file(file_id).file_path}'
-    document_handler.DocumentHandler(message.from_user.id, link)
+    document_handler.DocumentHandler(message.from_user.id, link).handle_voice()
 
 
 ignoring_types = ['sticker', 'audio', 'video', 'video_note', 'location', 'contact', '']
