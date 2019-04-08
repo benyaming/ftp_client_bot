@@ -107,6 +107,5 @@ class MediaHandler(object):
         send_media = actions.get(media_type)
 
         for operator in operators:
-            send_media(operator, )
-            admin_bot.send_document(operator, media, caption=caption, parse_mode='HTML')
+            send_media(operator, media, caption=caption, parse_mode='HTML')
         media.release_conn()
