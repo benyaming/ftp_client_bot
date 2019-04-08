@@ -101,7 +101,7 @@ class MediaHandler(object):
         media = resp.data
 
         actions = {
-            'docunemt': admin_bot.send_document,
+            'documemt': admin_bot.send_document,
             'photo': admin_bot.send_photo,
             'voice': admin_bot.send_voice
         }
