@@ -1,4 +1,4 @@
-import urllib3
+import os
 
 from telebot import TeleBot
 
@@ -7,10 +7,10 @@ import db
 
 class MediaHandler(object):
 
-    def __init__(self, user_id: int, link: str, caption: str = None,
+    def __init__(self, user_id: int, fn: str, caption: str = None,
                  media_type: str = 'photo'):
         self._user_id = user_id
-        self._link = link
+        self._fn = fn
         self._client_name = db.get_client_name(self._user_id)
         self._caption = caption
         self._media_type = media_type
@@ -24,10 +24,6 @@ class MediaHandler(object):
         else:
             caption = f'<b>{self._client_name}</b>'
 
-        connection_pool = urllib3.PoolManager()
-        resp = connection_pool.request('GET', self._link)
-        media = resp.data
-
         actions = {
             'document': admin_bot.send_document,
             'photo': admin_bot.send_photo,
@@ -35,6 +31,7 @@ class MediaHandler(object):
         }
         send_media = actions.get(self._media_type)
 
-        for operator in operators:
-            send_media(operator, media, caption=caption, parse_mode='HTML')
-        resp.release_conn()
+        with open(self._fn, 'rb') as media:
+            for operator in operators:
+                send_media(operator, media, caption=caption, parse_mode='HTML')
+        os.remove(self._fn)

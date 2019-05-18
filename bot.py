@@ -1,6 +1,7 @@
 from json import dumps
 
 import telebot
+import requests
 from telebot.types import Message
 from flask import request, Flask
 
@@ -19,6 +20,15 @@ route_path = f'/{settings.URI}/'
 bot = telebot.TeleBot(settings.USER_BOT_TOKEN)
 
 app = Flask(__name__)
+
+
+def download_file(file_id: str, filename: str):
+    link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
+        f'{bot.get_file(file_id).file_path}'
+    with open(filename, 'wb') as out:
+        r = requests.get(link, stream=True)
+        for chunk in r:
+            out.write(chunk)
 
 
 @app.route(route_path, methods=['POST'])
@@ -68,20 +78,19 @@ def handle_text_message(message: Message):
 @check_auth
 def handle_photo(message: Message):
     file_id = message.photo[-1].file_id
-    link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
-           f'{bot.get_file(file_id).file_path}'
+    download_file(file_id, file_id)
     caption = message.caption
-    MediaHandler(message.from_user.id, link, caption).handle_media()
+    MediaHandler(message.from_user.id, file_id, caption).handle_media()
 
 
 @bot.message_handler(func=lambda message: True, content_types=['document'])
 @check_auth
 def handle_document(message: Message):
     file_id = message.document.file_id
-    link = f'https://api.telegram.org/file/bot{settings.USER_BOT_TOKEN}/' \
-           f'{bot.get_file(file_id).file_path}'
+    file_name = message.document.file_name
+    download_file(file_id, file_name)
     caption = message.caption
-    MediaHandler(message.from_user.id, link, caption,
+    MediaHandler(message.from_user.id, file_name, caption,
                  media_type='document').handle_media()
 
 
