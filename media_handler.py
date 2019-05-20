@@ -34,4 +34,5 @@ class MediaHandler(object):
         with open(self._fn, 'rb') as media:
             for operator in operators:
                 send_media(operator, media, caption=caption, parse_mode='HTML')
+                media.seek(0)
         os.remove(self._fn)
