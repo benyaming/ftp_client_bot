@@ -5,10 +5,8 @@ import requests
 from telebot.types import Message
 from flask import request, Flask
 
-import db
-import settings
-import text_handler
-from media_handler import MediaHandler
+from client_bot import settings, db, text_handler
+from client_bot.media_handler import MediaHandler
 
 WEBHOOK_HOST = settings.BOT_HOST
 WEBHOOK_PORT = settings.BOT_PORT
@@ -115,13 +113,4 @@ def handle_text_message(message: Message):
 
 
 if __name__ == '__main__':
-    if settings.IS_SERVER:
-        bot.remove_webhook()
-        bot.set_webhook(
-            url=f'{base_url}{route_path}',
-            certificate=open(ssl_cert, 'r')
-        )
-
-    else:
-        bot.remove_webhook()
-        bot.polling(True, timeout=50)
+    bot.polling(True, timeout=50)

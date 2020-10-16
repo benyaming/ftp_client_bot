@@ -2,7 +2,7 @@ import os
 
 from telebot import TeleBot
 
-import db
+from client_bot import db
 
 
 class MediaHandler(object):

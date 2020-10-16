@@ -1,6 +1,6 @@
 import psycopg2
 
-from settings import db_parameters_string
+from client_bot.settings import db_parameters_string
 
 
 def check_auth(client_id: int) -> bool:

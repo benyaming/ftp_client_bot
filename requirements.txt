@@ -1,6 +1,0 @@
-telebot
-flask
-gunicorn
-psycopg2
-pytelegrambotapi
-requests

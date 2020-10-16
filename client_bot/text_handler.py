@@ -1,7 +1,7 @@
 from telebot import TeleBot
 from telebot.types import Message
 
-import db
+from client_bot import db
 
 
 class TextHandler(object):
